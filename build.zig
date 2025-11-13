@@ -6,20 +6,28 @@ pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
+    const gobject = b.dependency("gobject", .{
+        .target = target,
+        .optimize = optimize,
+    });
+
+    const root_module = b.createModule(.{
+        .root_source_file = b.path("src/main.zig"),
+        .target = target,
+        .optimize = optimize,
+        .imports = &.{
+            .{ .name = "glib", .module = gobject.module("glib2") },
+            .{ .name = "gobject", .module = gobject.module("gobject2") },
+            .{ .name = "gio", .module = gobject.module("gio2") },
+            .{ .name = "gtk", .module = gobject.module("gtk4") },
+        },
+    });
+
     // Create executable with main.zig as entry point
     const exe = b.addExecutable(.{
         .name = "gtk4-app",
-        .root_module = b.createModule(.{
-            .root_source_file = b.path("src/main.zig"),
-            .target = target,
-            .optimize = optimize,
-        }),
+        .root_module = root_module,
     });
-
-    // Link against C standard library (needed for GTK4)
-    exe.linkLibC();
-    // Link against GTK4 system library
-    exe.linkSystemLibrary("gtk4");
 
     // Install executable to zig-out/bin/
     b.installArtifact(exe);
