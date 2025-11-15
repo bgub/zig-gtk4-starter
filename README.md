@@ -2,6 +2,8 @@
 
 A simple demo of using Zig to create a GTK4 application. Inspired by [Ghostty](https://github.com/ghostty-org/ghostty), which uses Zig as the core and GTK4 for the Linux GUI.
 
+For a version that uses the zig-gobject bindings, see the [zig-gobject branch](https://github.com/bgub/zig-gtk4-starter/tree/zig-gobject).
+
 Just publishing since it took a while to get everything working (C interop and build especially).
 
 ## Requirements
